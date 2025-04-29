@@ -1,6 +1,20 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FaBell } from "react-icons/fa";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  PackagePlus,
+  Box,
+  List,
+  Undo2,
+  UserCircle,
+  Heart,
+  ShoppingCart,
+  CalendarCheck,
+  LogOut,
+} from "lucide-react";
 
 export function LoginSuccess() {
   const location = useLocation();
@@ -72,6 +86,7 @@ export function LoginSuccess() {
       const data = await response.json();
       if (response.ok) {
         setSearchResults(data.items[0]);
+        console.log(data.items[0]);
       } else {
         alert(data.message);
       }
@@ -281,422 +296,522 @@ export function LoginSuccess() {
     return () => clearTimeout(timer);
   }, [userID, navigate]);
 
+  const MenuItem = ({ icon, text, onClick, color, hover }) => (
+    <motion.li
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer ${color} ${hover}`}
+      onClick={onClick}
+    >
+      {icon}
+      {text}
+    </motion.li>
+  );
+
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "10px",
-        }}
-      >
-        <div>
-          Logged in as: <strong style={{ color: "green" }}>{username}</strong> (
-          <span style={{ color: "purple" }}>{userType}</span>)
-          <div>
-            {userType === "customer" ? (
-              <span style={{ color: "green" }}>&nbsp;Coins: {coins}💰</span>
-            ) : null}
-          </div>
-        </div>
-        <div style={{ position: "relative" }}>
-          <FaBell
-            size={24}
-            style={{ cursor: "pointer" }}
-            onClick={handleBellClick}
-            color={bellColor}
+      <div className="bg-gradient-to-r from-pink-200 via-yellow-100 to-blue-200 shadow-md py-4 px-6 flex justify-between items-center mb-3">
+        <div className="flex items-center space-x-3">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png"
+            alt="Logo"
+            className="w-10 h-10"
           />
+          <h1 className="text-3xl font-extrabold text-gray-800 tracking-wide">
+            ShopSphere
+          </h1>
+          <button className="text-sm bg-white text-pink-500 px-2 py-1 rounded-full shadow-md font-medium animate-bounce">
+            🎉 Big Deals!
+          </button>
+        </div>
+        <div className="flex space-x-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", stiffness: 120, damping: 15 }}
+          >
+            <div>
+              <span>Logged in as: </span>
+              <strong className="text-blue-700">{username}</strong> (
+              <span className="text-purple-500">{userType}</span>)
+              <div>
+                {userType === "customer" && (
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{
+                      delay: 0.3,
+                      type: "spring",
+                      stiffness: 120,
+                      damping: 15,
+                    }}
+                    className="text-green-600"
+                  >
+                    &nbsp;Coins: {coins}💰
+                  </motion.span>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+      <div className="flex justify-between items-center p-2.5">
+        <motion.div
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="relative w-10 h-10 flex items-center justify-center cursor-pointer"
+        >
+          <motion.div
+            className="w-10 h-10 rounded-full bg-black flex items-center justify-center"
+            animate={{ rotate: menuOpen ? 180 : 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <motion.div
+              className="w-3 h-3 border-t-2 border-r-2 border-white rotate-45"
+              animate={{ rotate: menuOpen ? 135 : 45 }}
+            />
+          </motion.div>
+        </motion.div>
+
+        <div className="relative">
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="cursor-pointer"
+            onClick={handleBellClick}
+          >
+            <FaBell size={24} color={bellColor} />
+          </motion.div>
+
           {notifications.length > 0 && (
-            <span
-              style={{
-                position: "absolute",
-                top: "-5px",
-                right: "-5px",
-                background: "red",
-                color: "white",
-                fontSize: "12px",
-                fontWeight: "bold",
-                borderRadius: "50%",
-                width: "18px",
-                height: "18px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.2 }}
+              className="absolute top-[-5px] right-[-5px] bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
             >
               {notifications.length}
-            </span>
+            </motion.span>
           )}
+
           {userType === "seller" && showNotifications && (
-            <div
-              style={{
-                position: "absolute",
-                top: "30px",
-                right: "10px",
-                background: "white",
-                border: "1px solid black",
-                padding: "10px",
-                borderRadius: "5px",
-                minWidth: "500px",
-              }}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="absolute top-[30px] right-10 bg-white border border-black p-4 rounded-lg min-w-[500px]"
             >
-              {" "}
-              {(() => {
-                let notificationList = [];
-                if (notifications.length > 0) {
-                  for (let index = 0; index < notifications.length; index++) {
-                    notificationList.push(
-                      <div
-                        key={index}
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          marginBottom: "5px",
-                        }}
-                      >
-                        <span>
-                          Customer{" "}
-                          <strong>{notifications[index].customer_name}</strong>{" "}
-                          ordered{" "}
-                          <strong>{notifications[index].item_name}</strong> on{" "}
-                          <strong>
-                            {new Date(
-                              notifications[index].order_date
-                            ).toLocaleDateString("en-MY")}
-                          </strong>
-                        </span>
-                        <button
-                          onClick={() => setItemToRead(notifications[index].id)}
-                        >
-                          Done
-                        </button>
-                      </div>
-                    );
-                  }
-                  return notificationList;
-                } else {
-                  return (
-                    <p style={{ textAlign: "center", color: "gray" }}>
-                      No new notifications
-                    </p>
-                  );
-                }
-              })()}
-            </div>
-          )}
-          {userType === "customer" && showNotifications && (
-            <div
-              style={{
-                position: "absolute",
-                top: "30px",
-                right: "10px",
-                background: "white",
-                border: "1px solid black",
-                padding: "10px",
-                borderRadius: "5px",
-                minWidth: "1000px",
-              }}
-            >
-              {" "}
-              {(() => {
-                let notificationList = [];
-                if (notifications.length > 0) {
-                  for (let index = 0; index < notifications.length; index++) {
-                    notificationList.push(
-                      <div
-                        key={index}
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          marginBottom: "5px",
-                        }}
-                      >
-                        <span>
-                          Order{" "}
-                          <strong>{notifications[index].product_name}</strong>{" "}
-                          refunded for reason of{" "}
-                          <strong>{notifications[index].refund_reason}</strong>{" "}
-                          has been{" "}
-                          <strong>
-                            {notifications[index].request_for_refund}
-                          </strong>
-                        </span>
-                        <button
-                          onClick={() => setItemToRead(notifications[index].id)}
-                        >
-                          Noted
-                        </button>
-                      </div>
-                    );
-                  }
-                  return notificationList;
-                } else {
-                  return (
-                    <p style={{ textAlign: "center", color: "gray" }}>
-                      No new notifications
-                    </p>
-                  );
-                }
-              })()}
-            </div>
-          )}
-        </div>
-      </div>
-      <div
-        style={{ cursor: "pointer", fontSize: "40px" }}
-        onClick={() => setMenuOpen(!menuOpen)}
-      >
-        ☰
-      </div>
-      {menuOpen && (
-        <div
-          style={{
-            position: "absolute",
-            top: "120px",
-            padding: "10px",
-            border: "1px solid black",
-            borderRadius: "5px",
-            background: "white",
-          }}
-        >
-          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            {userType === "seller" && (
-              <>
-                <li
-                  style={{ padding: "5px", cursor: "pointer", color: "green" }}
-                  onClick={() => {
-                    navigate("/SellItems", {
-                      state: { username, userType, userID },
-                    });
-                  }}
-                >
-                  Sell Item
-                </li>
-                <li
-                  style={{ padding: "5px", cursor: "pointer", color: "purple" }}
-                  onClick={() => {
-                    navigate("/AddStock", {
-                      state: { username, userType, userID },
-                    });
-                  }}
-                >
-                  Add Stock
-                </li>
-                <li
-                  style={{ padding: "5px", cursor: "pointer", color: "orange" }}
-                  onClick={() => {
-                    navigate("/StockFlow", {
-                      state: { username, userType, userID },
-                    });
-                  }}
-                >
-                  StockFlow
-                </li>
-                <li
-                  style={{ padding: "5px", cursor: "pointer", color: "blue" }}
-                  onClick={() => {
-                    navigate("/MyItems", {
-                      state: { username, userType, userID },
-                    });
-                  }}
-                >
-                  My items
-                </li>
-                <li
-                  style={{ padding: "5px", cursor: "pointer", color: "black" }}
-                  onClick={() => {
-                    navigate("/CustomerRefund", {
-                      state: { username, userType, userID },
-                    });
-                  }}
-                >
-                  Customer refund
-                </li>
-              </>
-            )}
-            {userType === "customer" && (
-              <>
-                <li
-                  style={{
-                    padding: "5px",
-                    cursor: "pointer",
-                    color: "brown",
-                  }}
-                  onClick={() =>
-                    navigate("/Profile", {
-                      state: { userType, username, userID },
-                    })
-                  }
-                >
-                  My Profile
-                </li>
-                <li
-                  style={{
-                    padding: "5px",
-                    cursor: "pointer",
-                    color: "Dark Gray",
-                  }}
-                  onClick={() =>
-                    navigate("/WishlistTable", {
-                      state: { userType, username, userID },
-                    })
-                  }
-                >
-                  My wishlist
-                </li>
-                <li
-                  style={{ padding: "5px", cursor: "pointer", color: "green" }}
-                  onClick={() =>
-                    navigate("/Orders", {
-                      state: { userType, username, userID },
-                    })
-                  }
-                >
-                  Orders
-                </li>
-                <li
-                  style={{ padding: "5px", cursor: "pointer", color: "blue" }}
-                  onClick={() =>
-                    navigate("/RefundTable", {
-                      state: { userType, username, userID },
-                    })
-                  }
-                >
-                  Previous Refund
-                </li>
-                <li
-                  style={{ padding: "5px", cursor: "pointer", color: "purple" }}
-                  onClick={() =>
-                    navigate("/DailyLogin", {
-                      state: { userType, username, userID },
-                    })
-                  }
-                >
-                  DailyLogin
-                </li>
-              </>
-            )}
-            <li
-              style={{ padding: "5px", cursor: "pointer", color: "red" }}
-              onClick={() => navigate("/")}
-            >
-              Logout
-            </li>
-          </ul>
-        </div>
-      )}
-      <center>
-        <p></p>
-        Search for your item here: &nbsp;
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        ></input>{" "}
-        &nbsp;
-        <button onClick={handleSearch}>Search</button>
-        <h1>Trending items</h1>
-        <table
-          style={{
-            width: "80%",
-            borderCollapse: "collapse",
-            textAlign: "center",
-          }}
-        >
-          <thead>
-            <tr>
-              <th style={{ border: "1px solid black" }}>Name</th>
-              <th style={{ border: "1px solid black" }}>Price(RM)</th>
-              <th style={{ border: "1px solid black" }}>
-                User Interest (Clicks)
-              </th>
-              <th style={{ border: "1px solid black" }}>
-                Average User Ratings
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item) => (
-              <tr key={item.id}>
-                <td
-                  style={{ border: "1px solid black", cursor: "pointer" }}
-                  onClick={() => {
-                    increaseClickCount(item.id);
-                    navigate(`/product/${item.id}`, {
-                      state: { username, userType, userID },
-                    });
-                  }}
-                >
-                  <span style={{ textDecoration: "none", color: "black" }}>
-                    {" "}
-                    {item.name}
-                  </span>
-                </td>
-                <td style={{ border: "1px solid black" }}>
-                  RM
-                  {Number(item.price).toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                  })}
-                </td>
-                <td style={{ border: "1px solid black" }}>{item.clicked}</td>
-                <td style={{ border: "1px solid black" }}>
-                  {!averageRate[item.id] || isNaN(averageRate[item.id])
-                    ? 0
-                    : Number(averageRate[item.id]).toFixed(1)}
-                  &nbsp;stars
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <h2>Search Results:</h2>
-        {searchResults.length > 0 ? (
-          <table
-            style={{
-              width: "80%",
-              borderCollapse: "collapse",
-              textAlign: "center",
-            }}
-          >
-            <thead>
-              <tr>
-                <th style={{ border: "1px solid black" }}>Name</th>
-                <th style={{ border: "1px solid black" }}>Price (RM)</th>
-                <th style={{ border: "1px solid black" }}>Clicks</th>
-              </tr>
-            </thead>
-            <tbody>
-              {searchResults.map((item) => (
-                <tr key={item.id}>
-                  <td
-                    style={{ border: "1px solid black", cursor: "pointer" }}
-                    onClick={() => {
-                      increaseClickCount(item.id);
-                      navigate(`/product/${item.id}`, {
-                        state: { username, userType, userID },
-                      });
-                    }}
+              {notifications.length > 0 ? (
+                notifications.map((notification, index) => (
+                  <motion.div
+                    key={index}
+                    className="flex justify-between items-center mb-2"
+                    whileHover={{ scale: 1.05 }}
                   >
-                    <span style={{ textDecoration: "none", color: "black" }}>
-                      {item.name}
+                    <span>
+                      Customer <strong>{notification.customer_name}</strong>{" "}
+                      ordered <strong>{notification.item_name}</strong> on{" "}
+                      <strong>
+                        {new Date(notification.order_date).toLocaleDateString(
+                          "en-MY"
+                        )}
+                      </strong>
                     </span>
-                  </td>
-                  <td style={{ border: "1px solid black" }}>
-                    RM
-                    {Number(item.price).toLocaleString("en-US", {
-                      minimumFractionDigits: 2,
-                    })}
-                  </td>
-                  <td style={{ border: "1px solid black" }}>{item.clicked}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    <motion.button
+                      onClick={() => setItemToRead(notification.id)}
+                      whileHover={{ scale: 1.1 }}
+                      className="text-sm text-blue-500"
+                    >
+                      Done
+                    </motion.button>
+                  </motion.div>
+                ))
+              ) : (
+                <p className="text-center text-gray-400">
+                  No new notifications
+                </p>
+              )}
+            </motion.div>
+          )}
+
+          {userType === "customer" && showNotifications && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="absolute top-[30px] right-10 bg-white border border-black p-4 rounded-lg min-w-[1000px]"
+            >
+              {notifications.length > 0 ? (
+                notifications.map((notification, index) => (
+                  <motion.div
+                    key={index}
+                    className="flex justify-between items-center mb-2"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <span>
+                      Order <strong>{notification.product_name}</strong>{" "}
+                      refunded for reason of{" "}
+                      <strong>{notification.refund_reason}</strong> has been{" "}
+                      <strong>{notification.request_for_refund}</strong>
+                    </span>
+                    <motion.button
+                      onClick={() => setItemToRead(notification.id)}
+                      whileHover={{ scale: 1.1 }}
+                      className="text-sm text-blue-500"
+                    >
+                      Noted
+                    </motion.button>
+                  </motion.div>
+                ))
+              ) : (
+                <p className="text-center text-gray-400">
+                  No new notifications
+                </p>
+              )}
+            </motion.div>
+          )}
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className="absolute top-[100px] right-[1600px] p-4 bg-white border border-black rounded shadow-md z-50 w-64"
+          >
+            <ul className="space-y-2 text-sm">
+              {userType === "seller" && (
+                <>
+                  <p className="font-semibold text-gray-500 text-xs px-1">
+                    Seller Menu
+                  </p>
+                  <MenuItem
+                    icon={<PackagePlus size={16} />}
+                    text="Sell Item"
+                    onClick={() =>
+                      navigate("/SellItems", {
+                        state: { username, userType, userID },
+                      })
+                    }
+                    color="text-green-600"
+                    hover="hover:bg-green-50"
+                  />
+                  <MenuItem
+                    icon={<Box size={16} />}
+                    text="Add Stock"
+                    onClick={() =>
+                      navigate("/AddStock", {
+                        state: { username, userType, userID },
+                      })
+                    }
+                    color="text-purple-600"
+                    hover="hover:bg-purple-50"
+                  />
+                  <MenuItem
+                    icon={<List size={16} />}
+                    text="StockFlow"
+                    onClick={() =>
+                      navigate("/StockFlow", {
+                        state: { username, userType, userID },
+                      })
+                    }
+                    color="text-orange-500"
+                    hover="hover:bg-orange-50"
+                  />
+                  <MenuItem
+                    icon={<Box size={16} />}
+                    text="My Items"
+                    onClick={() =>
+                      navigate("/MyItems", {
+                        state: { username, userType, userID },
+                      })
+                    }
+                    color="text-blue-600"
+                    hover="hover:bg-blue-50"
+                  />
+                  <MenuItem
+                    icon={<Undo2 size={16} />}
+                    text="Customer Refund"
+                    onClick={() =>
+                      navigate("/CustomerRefund", {
+                        state: { username, userType, userID },
+                      })
+                    }
+                    color="text-black"
+                    hover="hover:bg-gray-100"
+                  />
+                </>
+              )}
+              {userType === "customer" && (
+                <>
+                  <p className="font-semibold text-gray-500 text-xs px-1">
+                    Customer Menu
+                  </p>
+                  <MenuItem
+                    icon={<UserCircle size={16} />}
+                    text="My Profile"
+                    onClick={() =>
+                      navigate("/Profile", {
+                        state: { username, userType, userID },
+                      })
+                    }
+                    color="text-yellow-800"
+                    hover="hover:bg-yellow-50"
+                  />
+                  <MenuItem
+                    icon={<Heart size={16} />}
+                    text="My Wishlist"
+                    onClick={() =>
+                      navigate("/WishlistTable", {
+                        state: { username, userType, userID },
+                      })
+                    }
+                    color="text-gray-600"
+                    hover="hover:bg-gray-100"
+                  />
+                  <MenuItem
+                    icon={<ShoppingCart size={16} />}
+                    text="Orders"
+                    onClick={() =>
+                      navigate("/Orders", {
+                        state: { username, userType, userID },
+                      })
+                    }
+                    color="text-green-600"
+                    hover="hover:bg-green-50"
+                  />
+                  <MenuItem
+                    icon={<Undo2 size={16} />}
+                    text="Previous Refund"
+                    onClick={() =>
+                      navigate("/RefundTable", {
+                        state: { username, userType, userID },
+                      })
+                    }
+                    color="text-blue-600"
+                    hover="hover:bg-blue-50"
+                  />
+                  <MenuItem
+                    icon={<CalendarCheck size={16} />}
+                    text="Daily Login"
+                    onClick={() =>
+                      navigate("/DailyLogin", {
+                        state: { username, userType, userID },
+                      })
+                    }
+                    color="text-purple-600"
+                    hover="hover:bg-purple-50"
+                  />
+                </>
+              )}
+              <MenuItem
+                icon={<LogOut size={16} />}
+                text="Logout"
+                onClick={() => navigate("/")}
+                color="text-red-600"
+                hover="hover:bg-red-50"
+              />
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <center>
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0, y: -30 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 120, damping: 10 }}
+          className="flex items-center justify-center"
+        >
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search for your items here!"
+            className="p-2 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 mr-2 mb-10 w-72 sm:w-96 transition-all duration-300"
+          />
+          <motion.button
+            whileHover={{ scale: 1.2, rotate: 10 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={handleSearch}
+            className="text-3xl -mt-10"
+          >
+            🔎
+          </motion.button>
+        </motion.div>
+        <motion.div
+          initial={{ scale: 3, opacity: 0, rotate: 15 }}
+          animate={{ scale: 1, opacity: 1, rotate: 0 }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+          className="flex items-center justify-center animate-shake"
+        >
+          <p className="text-4xl mb-4 font-bold text-red-600 drop-shadow-lg animate-pulse">
+            ⚡ Trending Items ⚡
+          </p>
+        </motion.div>
+        <motion.div
+          initial={{ x: 300, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: -300, opacity: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+        >
+          <Carousel
+            showThumbs={false}
+            autoPlay
+            infiniteLoop
+            className="w-full md:w-3/4 lg:w-2/3 mb-10"
+          >
+            {(() => {
+              const slides = [];
+              for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                const parsedImage = JSON.parse(item.images);
+                const firstImage = parsedImage[2];
+                slides.push(
+                  <Link
+                    to={`/product/${item.id}`}
+                    state={{ username, userType, userID }}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                    onClick={() => increaseClickCount(item.id)}
+                    key={item.id}
+                  >
+                    <div className="flex items-center justify-between px-10 md:px-20 py-10 gap-8">
+                      <img
+                        className="w-48 h-48 object-contain rounded-lg shadow-md border border-gray-300"
+                        src={firstImage}
+                        alt={item.name}
+                      />
+                      <div className="text-left max-w-md">
+                        <h2 className="text-2xl font-semibold mb-2">
+                          {item.name}
+                        </h2>
+                        <p className="text-gray-700 whitespace-pre-line">
+                          {item.description}
+                        </p>
+                        <p className="mt-4 font-medium text-purple-400">
+                          👁️ {item.clicked} clicks
+                        </p>
+                        <p className="text-yellow-500 font-semibold">
+                          {!averageRate[item.id] || isNaN(averageRate[item.id])
+                            ? "⭐".repeat(0)
+                            : "⭐".repeat(
+                                Math.round(averageRate[item.id])
+                              )}{" "}
+                          <span className="text-gray-600">
+                            (
+                            {!averageRate[item.id] ||
+                            isNaN(averageRate[item.id])
+                              ? "0.0"
+                              : Number(averageRate[item.id]).toFixed(1)}{" "}
+                            / 5.0)
+                          </span>
+                        </p>
+                        <p className="mt-4 font-bold text-blue-500">
+                          RM {item.price}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              }
+              return slides;
+            })()}
+          </Carousel>
+        </motion.div>
+        <p className="text-4xl mb-10 font-bold">Search Results:</p>
+        {searchResults.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+            {(() => {
+              const elements = [];
+              for (let i = 0; i < searchResults.length; i++) {
+                const item = searchResults[i];
+                const parsedImage1 = JSON.parse(item.images);
+                const finalImage = parsedImage1[1];
+                elements.push(
+                  <Link
+                    to={`/product/${item.id}`}
+                    state={{ username, userType, userID }}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                    onClick={() => increaseClickCount(item.id)}
+                    key={item.id}
+                  >
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      whileHover={{
+                        scale: 1.05,
+                        boxShadow:
+                          "0 0 30px rgba(59, 130, 246, 0.7), 0 0 40px rgba(59, 130, 246, 0.5)",
+                      }}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                      className="relative w-full h-96 cursor-pointer"
+                      style={{
+                        perspective: 1000,
+                      }}
+                    >
+                      <div className="absolute inset-0 bg-white/60 backdrop-blur-lg border border-blue-400 rounded-xl shadow-xl p-4 flex flex-col justify-center items-center">
+                        <img
+                          src={finalImage}
+                          alt={item.name}
+                          className="object-contain w-[180px] h-[180px] rounded cursor-pointer mx-auto"
+                        />
+                        <h2 className="mt-2 text-lg font-bold text-blue-700 text-center hover:underline">
+                          {item.name}
+                        </h2>
+                        <p className="text-center text-sm">
+                          Price: RM
+                          {Number(item.price).toLocaleString("en-MY", {
+                            minimumFractionDigits: 2,
+                          })}
+                        </p>
+                        <div className="flex flex-col items-start text-xs text-gray-500 mb-3 w-full mt-4">
+                          {item.description.split("\n").map((line, index) => (
+                            <p key={index}>{line}</p>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  </Link>
+                );
+              }
+              return elements;
+            })()}
+          </div>
         ) : (
-          <p>No results found.</p>
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-center"
+          >
+            <motion.p
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-2xl font-semibold text-gray-600 mb-8"
+            >
+              Oops! No results found.
+            </motion.p>
+            <motion.img
+              src="https://media4.giphy.com/media/4yvtv94IUWGBEUxFNs/giphy.gif?cid=6c09b9526n4z6oklj1eftp7ftwu0qja76tw03tlo16y9fm1l&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=ts"
+              alt="Sad Emoji"
+              initial={{ scale: 0 }}
+              animate={{ scale: 2 }}
+              transition={{ duration: 0.8 }}
+              className="w-20 h-20 mx-auto mb-8"
+            />
+            <motion.p
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.6, delay: 1.0 }}
+              className="text-2xl font-semibold text-gray-600 mb-4"
+            >
+              We are working on improving so stay tuned!
+            </motion.p>
+          </motion.div>
         )}
       </center>
     </div>

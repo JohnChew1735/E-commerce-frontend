@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 export function AddStock() {
   const location = useLocation();
@@ -70,11 +71,36 @@ export function AddStock() {
 
   return (
     <div>
-      <p>
-        Logged in as: <strong style={{ color: "green" }}>{username}</strong> (
-        <span style={{ color: "purple" }}>{userType}</span>)
-      </p>
+      <div className="bg-gradient-to-r from-pink-200 via-yellow-100 to-blue-200 shadow-md py-4 px-6 flex justify-between items-center mb-3">
+        <div className="flex items-center space-x-3">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png"
+            alt="Logo"
+            className="w-10 h-10"
+          />
+          <h1 className="text-3xl font-extrabold text-gray-800 tracking-wide">
+            ShopSphere
+          </h1>
+          <button className="text-sm bg-white text-pink-500 px-2 py-1 rounded-full shadow-md font-medium animate-bounce">
+            🎉 Big Deals!
+          </button>
+        </div>
+        <div className="flex space-x-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", stiffness: 120, damping: 15 }}
+          >
+            <div>
+              <span>Logged in as: </span>
+              <strong className="text-blue-700">{username}</strong> (
+              <span className="text-purple-500">{userType}</span>)
+            </div>
+          </motion.div>
+        </div>
+      </div>
       <button
+        className="text-sm font-semibold bg-pink-400 text-white px-4 py-1 rounded-full shadow hover:bg-pink-500 transition"
         onClick={() => {
           navigate("/loginSuccess", {
             state: { username, userType, userID },
@@ -83,91 +109,66 @@ export function AddStock() {
       >
         Back
       </button>
-      <center>
-        <h1>Add Items</h1>
-        <table
-          style={{
-            width: "80%",
-            borderCollapse: "collapse",
-            textAlign: "center",
-          }}
+      <div className="flex flex-col items-center p-6">
+        <div className="text-4xl font-bold text-blue-700 animate-pulse mb-10">
+          Add items
+        </div>
+        <motion.div
+          className="overflow-x-auto p-4"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 120, damping: 10 }}
         >
-          <thead>
-            <tr>
-              <td style={{ border: "1px solid black" }}>Product name</td>
-              <td style={{ border: "1px solid black" }}>
-                Product current stock
-              </td>
-              <td style={{ border: "1px solid black" }}>
-                Stock amount to be added
-              </td>
-              <td style={{ border: "1px solid black" }}>Action</td>
-            </tr>
-          </thead>
-          <tbody>
-            {(() => {
-              let productArray = [];
-              for (let index = 0; index < myItems.length; index++) {
-                productArray.push(
-                  <tr key={index}>
-                    <td
-                      style={{
-                        border: "1px solid black",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignContent: "center",
-                        height: "50px",
-                      }}
+          <table className="min-w-full bg-white rounded-lg shadow-lg">
+            <thead>
+              <tr className="bg-blue-100">
+                <th className="px-4 py-3 border">Product Name</th>
+                <th className="px-4 py-3 border">Current Stock</th>
+                <th className="px-4 py-3 border">Add Amount</th>
+                <th className="px-4 py-3 border">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {myItems.map((item, index) => (
+                <tr
+                  key={index}
+                  className="hover:bg-gray-50 transition-colors duration-300"
+                >
+                  <td className="flex items-center gap-3 px-4 py-3 border">
+                    <img
+                      src={finalImages[index]}
+                      alt={item.name}
+                      className="w-12 h-12 object-cover rounded-lg shadow"
+                    />
+                    <span className="font-semibold">{item.name}</span>
+                  </td>
+                  <td className="px-4 py-3 border">{item.stockCount}</td>
+                  <td className="px-4 py-3 border">
+                    <input
+                      type="number"
+                      value={item.stockAmount}
+                      onChange={(e) => setStockAmount(e.target.value)}
+                      className="border rounded-md px-2 py-1 w-24 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    />
+                  </td>
+                  <td className="px-4 py-3 border">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() =>
+                        addStockCount(item.id, stockAmount, userID)
+                      }
+                      className="bg-orange-400 hover:bg-orange-500 text-white font-bold px-4 py-2 rounded-md shadow-md transition-all duration-300"
                     >
-                      <img
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          objectFit: "cover",
-                          borderRadius: "5px",
-                        }}
-                        src={finalImages[index]}
-                        alt={myItems[index].name}
-                      ></img>
-                      {myItems[index].name}
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      {myItems[index].stockCount}
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      <input
-                        type="number"
-                        value={myItems[index].stockAmount}
-                        onChange={(e) => setStockAmount(e.target.value)}
-                      ></input>
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      <button
-                        style={{
-                          cursor: "pointer",
-                          color: "white",
-                          backgroundColor: "orange",
-                          borderRadius: "5px",
-                          padding: "5px",
-                        }}
-                        onClick={() => {
-                          addStockCount(myItems[index].id, stockAmount, userID);
-                        }}
-                      >
-                        Add stock
-                      </button>
-                    </td>
-                  </tr>
-                );
-              }
-              return productArray;
-            })()}
-            <tr>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-      </center>
+                      Add Stock
+                    </motion.button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </motion.div>
+      </div>
     </div>
   );
 }

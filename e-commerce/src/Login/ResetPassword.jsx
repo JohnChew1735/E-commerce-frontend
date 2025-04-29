@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export function ResetPassword() {
   const location = useLocation();
@@ -44,49 +45,129 @@ export function ResetPassword() {
 
   return (
     <div>
+      <div className="bg-gradient-to-r from-pink-200 via-yellow-100 to-blue-200 shadow-md py-4 px-6 flex justify-between items-center mb-3">
+        <div className="flex items-center space-x-3">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png"
+            alt="Logo"
+            className="w-10 h-10"
+          />
+          <h1 className="text-3xl font-extrabold text-gray-800 tracking-wide">
+            ShopSphere
+          </h1>
+          <button
+            className="text-sm bg-white text-pink-500 px-2 py-1 rounded-full shadow-md font-medium animate-bounce"
+            onClick={() => {
+              navigate("/Login");
+            }}
+          >
+            🎉 Big Deals!
+          </button>
+        </div>
+      </div>
       <button
-        onClick={() => {
-          navigate("/ForgetPasswordVerify");
-        }}
+        className="text-sm font-semibold bg-pink-400 text-white px-4 py-1 rounded-full shadow hover:bg-pink-500 transition"
+        onClick={() => navigate("/ForgetPasswordVerify")}
       >
         Back
       </button>
       <center>
-        <h1>Reset Password</h1>
-        <p></p>
-        Email: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input value={email} disabled></input>
-        <p></p>
-        Username: &nbsp;&nbsp;&nbsp;
-        <input value={username} disabled></input>
-        <h3>Please confirm your new password below:</h3>
-        <p></p>
-        Password:
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input
-          type={showPassword ? "text" : "password"}
-          value={password1}
-          onChange={(e) => setPassword1(e.target.value)}
-        ></input>{" "}
-        <p></p>
-        Confirm your password: &nbsp;&nbsp;&nbsp;
-        <input
-          type={showPassword ? "text" : "password"}
-          value={password2}
-          onChange={(e) => setPassword2(e.target.value)}
-        ></input>
-        <p></p>
-        <button onClick={() => setShowPassword(!showPassword)}>
-          {showPassword ? "🙈 Hide" : "👁️ Show"}
-        </button>{" "}
-        &nbsp;
-        <button
-          onClick={() => {
-            changePassword(userType);
-          }}
+        <p className="text-4xl mb-4 font-bold text-orange-600 drop-shadow-lg animate-pulse">
+          Reset Password
+        </p>
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 120, damping: 10 }}
+          className="bg-white p-6 rounded-lg shadow-lg max-w-sm mx-auto mt-10 space-y-4"
         >
-          Change password
-        </button>
+          <h2 className="text-2xl font-bold text-center">
+            Reset Your Password
+          </h2>
+
+          <div className="flex flex-col">
+            <label className="mb-1 font-bold text-gray-700 text-left">
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              disabled
+              className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 outline-none"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 font-bold text-gray-700 text-left">
+              Username
+            </label>
+            <input
+              type="text"
+              value={username}
+              disabled
+              className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 outline-none"
+            />
+            <button></button>
+          </div>
+
+          <h3 className="text-lg font-semibold text-center">
+            Please confirm your new password below:
+          </h3>
+          <div className="flex flex-col">
+            <label className="mb-1 font-medium text-gray-700">
+              New Password
+            </label>
+            <div className="flex items-center">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password1}
+                onChange={(e) => setPassword1(e.target.value)}
+                className="flex-grow p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300 hover:shadow-md"
+                placeholder="••••••••"
+              />
+              <button
+                onClick={() => setShowPassword(!showPassword)}
+                className="ml-2 text-xl hover:scale-110 transition-transform"
+                title="Toggle password visibility"
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 font-medium text-gray-700">
+              Confirm Password
+            </label>
+            <div className="flex items-center">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password2}
+                onChange={(e) => setPassword2(e.target.value)}
+                className="flex-grow p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300 hover:shadow-md"
+                placeholder="••••••••"
+              />
+              <button
+                onClick={() => setShowPassword(!showPassword)}
+                className="ml-2 text-xl hover:scale-110 transition-transform"
+                title="Toggle password visibility"
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
+          </div>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-full py-2 px-4 bg-blue-500 text-white font-bold rounded-md shadow-md hover:bg-blue-600 transition-colors"
+            onClick={() => {
+              changePassword(userType);
+            }}
+          >
+            Change password
+          </motion.button>
+        </motion.div>
       </center>
     </div>
   );

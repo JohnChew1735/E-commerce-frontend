@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 export function Profile() {
   const location = useLocation();
@@ -14,6 +15,8 @@ export function Profile() {
   const [imageUrl, setImageUrl] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showFullImage, setShowFullImage] = useState(false);
+  const [fullImageSrc, setFullImageSrc] = useState(null);
 
   //handle image upload
   async function handleUpload(event) {
@@ -156,11 +159,36 @@ export function Profile() {
 
   return (
     <div>
-      <p>
-        Logged in as: <strong style={{ color: "green" }}>{username}</strong> (
-        <span style={{ color: "purple" }}>{userType}</span>)
-      </p>
+      <div className="bg-gradient-to-r from-pink-200 via-yellow-100 to-blue-200 shadow-md py-4 px-6 flex justify-between items-center mb-3">
+        <div className="flex items-center space-x-3">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png"
+            alt="Logo"
+            className="w-10 h-10"
+          />
+          <h1 className="text-3xl font-extrabold text-gray-800 tracking-wide">
+            ShopSphere
+          </h1>
+          <button className="text-sm bg-white text-pink-500 px-2 py-1 rounded-full shadow-md font-medium animate-bounce">
+            🎉 Big Deals!
+          </button>
+        </div>
+        <div className="flex space-x-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", stiffness: 120, damping: 15 }}
+          >
+            <div>
+              <span>Logged in as: </span>
+              <strong className="text-blue-700">{username}</strong> (
+              <span className="text-purple-500">{userType}</span>)
+            </div>
+          </motion.div>
+        </div>
+      </div>
       <button
+        className="text-sm font-semibold bg-pink-400 text-white px-4 py-1 rounded-full shadow hover:bg-pink-500 transition"
         onClick={() => {
           navigate("/loginSuccess", {
             state: { username, userType, userID },
@@ -169,78 +197,124 @@ export function Profile() {
       >
         Back
       </button>
-      <center>
-        <h1>My Profile</h1>
-        <div
-          style={{
-            position: "relative",
-            display: "inline-block",
-          }}
-        >
-          <h2>
-            <strong>Current profile picture:</strong>
-          </h2>
-          <p></p>
-          {imageUrl ? (
-            <img
-              src={imageUrl}
-              alt="Uploaded"
-              style={{
-                border: "1px solid black",
-                borderRadius: "2px",
-                width: "200px",
-                height: "200px",
-              }}
-            ></img>
-          ) : (
-            <img
-              src={userInfo.profileImage}
-              alt={userInfo.username}
-              style={{
-                width: "200px",
-                height: "200px",
-                border: "1px solid black",
-                borderRadius: "5px",
-              }}
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 120, damping: 10 }}
+        className="bg-white p-6 rounded-lg shadow-lg max-w-sm mx-auto mt-10 space-y-4"
+      >
+        <div className="flex flex-col items-center justify-center space-y-4 mt-6">
+          <motion.p className="text-4xl font-bold text-orange-600 drop-shadow-lg animate-pulse">
+            My Profile
+          </motion.p>
+
+          <div className="relative flex flex-col items-center gap-2">
+            <p className="text-gray-700 font-medium">
+              Current profile picture:
+            </p>
+            {imageUrl ? (
+              <motion.img
+                src={imageUrl}
+                alt="Uploaded"
+                className="w-[200px] h-[200px] rounded-md border border-black object-cover cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  setFullImageSrc(imageUrl);
+                  setShowFullImage(true);
+                }}
+              />
+            ) : (
+              <motion.img
+                src={userInfo.profileImage}
+                alt={userInfo.username}
+                className="w-[200px] h-[200px] rounded-md border border-black object-cover cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  setFullImageSrc(userInfo.profileImage);
+                  setShowFullImage(true);
+                }}
+              />
+            )}
+
+            <label className="text-sm font-medium mt-2">
+              New profile picture:
+            </label>
+            <input
+              type="file"
+              onChange={handleUpload}
+              accept="image/*"
+              className="cursor-pointer"
             />
-          )}
-          <p></p> New profile picture: &nbsp;&nbsp;&nbsp;
-          <input type={"file"} onChange={handleUpload} accept={"image"}></input>
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          {loading && <p> Uploading...</p>}
+            {error && <p className="text-red-500">{error}</p>}
+            {loading && <p className="text-blue-500">Uploading...</p>}
+          </div>
+          <div className="flex flex-col items-start gap-2">
+            <label className="font-medium">
+              Username:&nbsp;
+              <input
+                defaultValue={usernameInput}
+                type="text"
+                onFocus={() => setUsernameInput("")}
+                onChange={(e) => setUsernameInput(e.target.value)}
+                className="border px-2 py-1 rounded-md"
+              />
+            </label>
+
+            <label className="font-medium">
+              Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <input
+                value={emailInput}
+                type="text"
+                onFocus={() => setEmailInput("")}
+                onChange={(e) => setEmailInput(e.target.value)}
+                className="border px-2 py-1 rounded-md"
+              />
+            </label>
+            <div className="flex flex-col">
+              <div className="flex items-center">
+                <label className="font-medium">Password:&nbsp;</label>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  value={newPassword}
+                  className="border px-2 py-1 rounded-md"
+                />
+                &nbsp;
+                <motion.button
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="ml-2 text-sm text-blue-500"
+                  whileHover={{ scale: 1.1 }}
+                >
+                  {showPassword ? "🙈" : "👁️"}
+                </motion.button>
+              </div>
+            </div>
+          </div>
+          <motion.button
+            disabled={loading}
+            onClick={handleChangeInformation}
+            className="bg-orange-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-orange-600 transition-all disabled:opacity-50"
+            whileHover={{ scale: loading ? 1 : 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            {loading ? "Processing..." : "Update Information"}
+          </motion.button>
         </div>
-        <p></p>
-        Username: &nbsp;&nbsp;
-        <input
-          defaultValue={usernameInput}
-          type={"text"}
-          onFocus={() => setUsernameInput("")}
-          onChange={(e) => setUsernameInput(e.target.value)}
-        ></input>
-        <p></p>
-        Email: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input
-          value={emailInput}
-          type={"text"}
-          onFocus={() => setEmailInput("")}
-          onChange={(e) => setEmailInput(e.target.value)}
-        ></input>
-        <p></p>
-        Password:&nbsp;&nbsp;&nbsp;
-        <input
-          type={showPassword ? "text" : "password"}
-          onChange={(e) => setNewPassword(e.target.value)}
-          value={newPassword}
-        ></input>
-        &nbsp;
-        <button onClick={() => setShowPassword(!showPassword)}>
-          {showPassword ? "🙈 Hide" : "👁️ Show"}{" "}
-        </button>
-        <p></p>
-        <button disabled={loading} onClick={() => handleChangeInformation()}>
-          Update information
-        </button>
-      </center>
+      </motion.div>
+      {showFullImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center"
+          onClick={() => setShowFullImage(false)}
+        >
+          <img
+            src={fullImageSrc}
+            alt="Full View"
+            className="max-w-[90%] max-h-[90%] rounded-lg shadow-lg"
+          />
+        </div>
+      )}
     </div>
   );
 }

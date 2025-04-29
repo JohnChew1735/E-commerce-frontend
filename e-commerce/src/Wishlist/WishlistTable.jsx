@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 export function WishlistTable() {
   const location = useLocation();
@@ -43,7 +44,6 @@ export function WishlistTable() {
         );
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
           setMyWishList(data.data);
         }
       } catch (error) {
@@ -225,11 +225,36 @@ export function WishlistTable() {
 
   return (
     <div>
-      <p>
-        Logged in as: <strong style={{ color: "green" }}>{username}</strong> (
-        <span style={{ color: "purple" }}>{userType}</span>)
-      </p>
+      <div className="bg-gradient-to-r from-pink-200 via-yellow-100 to-blue-200 shadow-md py-4 px-6 flex justify-between items-center mb-3">
+        <div className="flex items-center space-x-3">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png"
+            alt="Logo"
+            className="w-10 h-10"
+          />
+          <h1 className="text-3xl font-extrabold text-gray-800 tracking-wide">
+            ShopSphere
+          </h1>
+          <button className="text-sm bg-white text-pink-500 px-2 py-1 rounded-full shadow-md font-medium animate-bounce">
+            🎉 Big Deals!
+          </button>
+        </div>
+        <div className="flex space-x-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", stiffness: 120, damping: 15 }}
+          >
+            <div>
+              <span>Logged in as: </span>
+              <strong className="text-blue-700">{username}</strong> (
+              <span className="text-purple-500">{userType}</span>)
+            </div>
+          </motion.div>
+        </div>
+      </div>
       <button
+        className="text-sm font-semibold bg-pink-400 text-white px-4 py-1 rounded-full shadow hover:bg-pink-500 transition"
         onClick={() => {
           navigate("/loginSuccess", {
             state: { username, userType, userID },
@@ -238,151 +263,100 @@ export function WishlistTable() {
       >
         Back
       </button>
-      <center>
-        <h1>My Wishlist Table</h1>
-        <table
-          style={{
-            width: "80%",
-            borderCollapse: "collapse",
-            textAlign: "center",
-          }}
-        >
-          <thead>
-            <tr>
-              <td style={{ border: "1px solid black" }}></td>
-              <td style={{ border: "1px solid black" }}>Product Name</td>
-              <td style={{ border: "1px solid black" }}>Quantity</td>
-              <td style={{ border: "1px solid black" }}>Price per item</td>
-              <td style={{ border: "1px solid black" }}>Total price</td>
-              <td style={{ border: "1px solid black" }}>Item note</td>
-              <td style={{ border: "1px solid black" }}>Created at(Date)</td>
-              <td style={{ border: "1px solid black" }}>Created at(Time)</td>
-              <td style={{ border: "1px solid black" }}>Created at(Time)</td>
-              <td style={{ border: "1px solid black" }}>Action</td>
-            </tr>
-          </thead>
-          <tbody>
-            {(() => {
-              let productWishlist = [];
-              for (let index = 0; index < myWishList.length; index++) {
-                productWishlist.push(
-                  <tr key={index}>
-                    <td style={{ border: "1px solid black" }}>
-                      <img
-                        src={myWishListFirstImage[index]}
-                        alt={myWishList[index].name}
-                        style={{
-                          height: "100px",
-                          width: "100px",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => {
-                          navigate(`/product/${myWishList[index].item_id}`, {
-                            state: { username, userType, userID },
-                          });
-                        }}
-                      ></img>
-                    </td>
-                    <td
-                      style={{
-                        border: "1px solid black",
-                        cursor: "pointer",
-                        color: "blue",
-                        fontSize: "20px",
-                      }}
-                      onClick={() => {
-                        navigate(`/product/${myWishList[index].item_id}`, {
-                          state: { username, userType, userID },
-                        });
-                      }}
-                    >
-                      <strong>{myWishList[index].name}</strong>
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      {myWishList[index].quantity}
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      {Number(myWishList[index].price).toLocaleString("en-MY", {
-                        minimumFractionDigits: 2,
-                      })}
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      {(
-                        Number(myWishList[index].price) *
-                        Number(myWishList[index].quantity)
-                      ).toLocaleString("en-MY", { minimumFractionDigits: 2 })}
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      <textarea
-                        value={myWishList[index].note}
-                        style={{ width: "160px", height: "82px" }}
-                        disabled
-                      ></textarea>
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      {new Date(
-                        myWishList[index].created_at
-                      ).toLocaleDateString("en-MY")}
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      {new Date(
-                        myWishList[index].created_at
-                      ).toLocaleTimeString("en-MY", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      {myWishList[index].status === "active"
-                        ? "🛒 In Wishlist"
-                        : "✅ Purchased"}
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      {myWishList[index].status === "added to cart" ? (
-                        <button
-                          style={{
-                            height: "50px",
-                            width: "120px",
-                            fontSize: "17px",
-                            color: "grey",
-                            backgroundColor: "gold",
-                            borderRadius: "10px",
-                          }}
-                          disabled
-                        >
-                          Added to cart
-                        </button>
-                      ) : myWishList[index].status === "active" ? (
-                        <button
-                          style={{
-                            height: "50px",
-                            width: "120px",
-                            fontSize: "17px",
-                            color: "white",
-                            backgroundColor: "green",
-                            borderRadius: "10px",
-                          }}
-                          onClick={() =>
-                            handleAddToCart(
-                              myWishList[index].wishlistID,
-                              myWishList[index].item_id,
-                              myWishList[index].quantity,
-                              myWishList[index].price
-                            )
-                          }
-                        >
-                          Add To Cart
-                        </button>
-                      ) : null}
-                    </td>
-                  </tr>
-                );
-              }
-              return productWishlist;
-            })()}
-          </tbody>
-        </table>
-      </center>
+      <div className="flex flex-col items-center justify-center mt-6">
+        <motion.p className="text-4xl font-bold text-green-600 drop-shadow-lg animate-pulse">
+          My Wishlist Table
+        </motion.p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+        {myWishList.map((item, index) => {
+          const image = myWishListFirstImage[index];
+          const totalPrice = Number(item.price) * Number(item.quantity);
+          const statusText =
+            item.status === "active"
+              ? "🛒 In Wishlist"
+              : item.status === "added to cart"
+              ? "🛒 Added"
+              : "✅ Purchased";
+
+          return (
+            <motion.div
+              key={item.wishlistID}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="relative bg-white/30 backdrop-blur-lg border border-white/50 rounded-xl shadow-xl p-4 overflow-hidden group"
+            >
+              {/* Front */}
+              <div className="transition-transform duration-500 ease-in-out">
+                <img
+                  src={image}
+                  alt={item.name}
+                  className="object-contain w-[180px] h-[180px] rounded mx-auto"
+                />
+                <p className="mt-2 text-lg font-bold text-blue-700 text-center">
+                  {item.name}
+                </p>
+                <p className="text-center">Quantity: {item.quantity}</p>
+                <p className="text-center">
+                  Price: RM
+                  {Number(item.price).toLocaleString("en-MY", {
+                    minimumFractionDigits: 2,
+                  })}
+                </p>
+                <p className="text-center">
+                  Total: RM
+                  {totalPrice.toLocaleString("en-MY", {
+                    minimumFractionDigits: 2,
+                  })}
+                </p>
+                <p className="text-sm italic text-center mt-1">{statusText}</p>
+              </div>
+
+              {/* Back (Revealed on hover) */}
+              <div className="absolute inset-0 transform rotate-y-180 opacity-0 group-hover:opacity-100 group-hover:rotate-y-0 transition-all duration-500 ease-in-out flex flex-col justify-center items-center bg-white/60 backdrop-blur-lg p-4">
+                <textarea
+                  value={item.note}
+                  disabled
+                  className="w-full text-sm border rounded p-2 mb-2"
+                />
+                <p className="text-xs text-gray-500 mb-3">
+                  {new Date(item.created_at).toLocaleDateString("en-MY")} @{" "}
+                  {new Date(item.created_at).toLocaleTimeString("en-MY", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+                {item.status === "added to cart" ? (
+                  <button
+                    disabled
+                    className="px-4 py-2 rounded text-gray-600 bg-yellow-300"
+                  >
+                    Added to cart
+                  </button>
+                ) : item.status === "active" ? (
+                  <motion.button
+                    onClick={() =>
+                      handleAddToCart(
+                        item.wishlistID,
+                        item.item_id,
+                        item.quantity,
+                        item.price
+                      )
+                    }
+                    className="px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Add to Cart
+                  </motion.button>
+                ) : null}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
     </div>
   );
 }

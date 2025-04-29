@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 export function SellItems() {
   const navigate = useNavigate();
@@ -143,135 +144,176 @@ export function SellItems() {
 
   return (
     <div>
-      <p>
-        Logged in as: <strong style={{ color: "green" }}>{username}</strong> (
-        <span style={{ color: "purple" }}>{userType}</span>)
-      </p>
+      <div className="bg-gradient-to-r from-pink-200 via-yellow-100 to-blue-200 shadow-md py-4 px-6 flex justify-between items-center mb-3">
+        <div className="flex items-center space-x-3">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png"
+            alt="Logo"
+            className="w-10 h-10"
+          />
+          <h1 className="text-3xl font-extrabold text-gray-800 tracking-wide">
+            ShopSphere
+          </h1>
+          <button className="text-sm bg-white text-pink-500 px-2 py-1 rounded-full shadow-md font-medium animate-bounce">
+            🎉 Big Deals!
+          </button>
+        </div>
+        <div className="flex space-x-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", stiffness: 120, damping: 15 }}
+          >
+            <div>
+              <span>Logged in as: </span>
+              <strong className="text-blue-700">{username}</strong> (
+              <span className="text-purple-500">{userType}</span>)
+            </div>
+          </motion.div>
+        </div>
+      </div>
       <button
+        className="text-sm font-semibold bg-pink-400 text-white px-4 py-1 rounded-full shadow hover:bg-pink-500 transition"
         onClick={() =>
           navigate("/loginSuccess", { state: { username, userType, userID } })
         }
       >
         Back
       </button>
-      <center>
-        <h1>Add item to the market</h1>
-        <p></p>
-        Product
-        name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input
-          type="text"
-          value={productName}
-          onChange={(e) => {
-            setProductName(e.target.value);
-          }}
-        ></input>
-        <p></p>
-        <label>
-          Choose a
-          brand:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        </label>
-        <select
-          type="text"
-          value={brand}
-          onChange={(e) => setBrand(e.target.value)}
+      <div className="flex flex-col items-center p-6">
+        <div className="text-4xl font-bold text-orange-400 animate-pulse">
+          Add item to the market
+        </div>
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 100, damping: 14 }}
+          className="bg-white p-6 rounded-lg shadow-lg max-w-sm mx-auto mt-10 space-y-4"
         >
-          {(() => {
-            let rows = [];
-            rows.push(
-              <option key="" value="">
-                Please select a brand
-              </option>
-            );
-            for (let index = 0; index < brandList.length; index++) {
-              if (brandList.length > 0) {
+          <div className="flex flex-col gap-2 items-center">
+            <label className="font-medium text-gray-700 mb-1">
+              Product name
+            </label>
+            <input
+              type="text"
+              value={productName}
+              onChange={(e) => {
+                setProductName(e.target.value);
+              }}
+              className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300 hover:shadow-md"
+            ></input>
+            <label className="font-medium text-gray mb-1">
+              Choose a brand:
+            </label>
+            <select
+              type="text"
+              value={brand}
+              onChange={(e) => setBrand(e.target.value)}
+              className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300 hover:shadow-md"
+            >
+              {(() => {
+                let rows = [];
                 rows.push(
-                  <option key={index} value={brandList[index]}>
-                    {brandList[index]}
+                  <option key="" value="">
+                    Please select a brand
                   </option>
                 );
-              }
-            }
-            rows.push(
-              <option key="Others" value="Others">
-                Others
-              </option>
-            );
-            return rows;
-          })()}
-        </select>
-        <p></p>
-        <label>
-          Choose a category: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          &nbsp;&nbsp;
-        </label>
-        <select
-          type="text"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          {(() => {
-            let rows = [];
-            rows.push(
-              <option key="" value="">
-                Please select a category
-              </option>
-            );
-            for (let index = 0; index < categoryList.length; index++) {
-              if (categoryList.length > 0) {
+                for (let index = 0; index < brandList.length; index++) {
+                  if (brandList.length > 0) {
+                    rows.push(
+                      <option key={index} value={brandList[index]}>
+                        {brandList[index]}
+                      </option>
+                    );
+                  }
+                }
                 rows.push(
-                  <option key={index} value={categoryList[index]}>
-                    {categoryList[index]}
+                  <option key="Others" value="Others">
+                    Others
                   </option>
                 );
-              }
-            }
-            rows.push(
-              <option key="Others" value="Others">
-                Others
-              </option>
-            );
-            return rows;
-          })()}
-        </select>
-        <p></p>
-        Product price
-        (RM):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input
-          type="number"
-          value={productPrice}
-          onChange={(e) => setProductPrice(e.target.value)}
-        ></input>
-        <p></p>
-        Product
-        description:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <textarea
-          type="text"
-          value={productDescription}
-          onChange={(e) => setProductDescription(e.target.value)}
-          placeholder="Enter item description"
-          width="150px"
-        ></textarea>
-        <p></p>
-        Product
-        image:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input
-          type="text"
-          value={productImages}
-          onChange={(e) => setProductImages(e.target.value)}
-        ></input>
-        <p></p>
-        <button
-          onClick={() => {
-            addItem();
-            navigate("/loginSuccess", {
-              state: { username, userType, userID },
-            });
-          }}
-        >
-          Submit
-        </button>
-      </center>
+                return rows;
+              })()}
+            </select>
+            <label className="font-medium text-gray-700 mb-1">
+              Choose a category
+            </label>
+            <select
+              type="text"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue0499 outline-none transition-all duration-300 hover:shadow-md"
+            >
+              {(() => {
+                let rows = [];
+                rows.push(
+                  <option key="" value="">
+                    Please select a category
+                  </option>
+                );
+                for (let index = 0; index < categoryList.length; index++) {
+                  if (categoryList.length > 0) {
+                    rows.push(
+                      <option key={index} value={categoryList[index]}>
+                        {categoryList[index]}
+                      </option>
+                    );
+                  }
+                }
+                rows.push(
+                  <option key="Others" value="Others">
+                    Others
+                  </option>
+                );
+                return rows;
+              })()}
+            </select>
+            <label className="font-medium text-gray-700 mb-1">
+              Product price (RM)
+            </label>
+            <input
+              type="number"
+              value={productPrice}
+              onChange={(e) => setProductPrice(e.target.value)}
+              className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300 hover:shadow-md"
+            ></input>
+            <label className="text-gray-700 font-medium mb-1">
+              Product description:
+            </label>
+            <textarea
+              type="text"
+              value={productDescription}
+              onChange={(e) => setProductDescription(e.target.value)}
+              placeholder="Enter item description"
+              width="150px"
+              className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300 hover:shadow-md"
+            ></textarea>
+            <label className="text-gray-700 font-medium mb-1">
+              Product image
+            </label>
+            <input
+              type="text"
+              value={productImages}
+              onChange={(e) => setProductImages(e.target.value)}
+              className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300 hover:shadow-md"
+            ></input>
+            <motion.button
+              disabled={!productName || !brand || !category || !productPrice}
+              onClick={() => {
+                addItem();
+                navigate("/loginSuccess", {
+                  state: { username, userType, userID },
+                });
+              }}
+              className="w-full py-2 px-4 bg-blue-500 text-white font-bold rounded-md shadow-md hover:bg-blue-600 transition-all"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              Submit
+            </motion.button>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }

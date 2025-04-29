@@ -1,5 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
 
 export function EditItems() {
   const location = useLocation();
@@ -206,11 +209,36 @@ export function EditItems() {
 
   return (
     <div>
-      <p>
-        Logged in as: <strong style={{ color: "green" }}>{username}</strong> (
-        <span style={{ color: "purple" }}>{userType}</span>)
-      </p>
+      <div className="bg-gradient-to-r from-pink-200 via-yellow-100 to-blue-200 shadow-md py-4 px-6 flex justify-between items-center mb-3">
+        <div className="flex items-center space-x-3">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png"
+            alt="Logo"
+            className="w-10 h-10"
+          />
+          <h1 className="text-3xl font-extrabold text-gray-800 tracking-wide">
+            ShopSphere
+          </h1>
+          <button className="text-sm bg-white text-pink-500 px-2 py-1 rounded-full shadow-md font-medium animate-bounce">
+            🎉 Big Deals!
+          </button>
+        </div>
+        <div className="flex space-x-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", stiffness: 120, damping: 15 }}
+          >
+            <div>
+              <span>Logged in as: </span>
+              <strong className="text-blue-700">{username}</strong> (
+              <span className="text-purple-500">{userType}</span>)
+            </div>
+          </motion.div>
+        </div>
+      </div>
       <button
+        className="text-sm font-semibold bg-pink-400 text-white px-4 py-1 rounded-full shadow hover:bg-pink-500 transition"
         onClick={() => {
           navigate("/MyItems", {
             state: { username, userType, userID },
@@ -219,210 +247,232 @@ export function EditItems() {
       >
         Back
       </button>
-      <center>
-        <h1>Edit item</h1>
-        <table
-          style={{
-            width: "80%",
-            borderCollapse: "collapse",
-            textAlign: "center",
-          }}
-        >
-          <thead>
-            <tr>
-              <td style={{ border: "1px solid black" }}>
-                <strong>Product details</strong>
-              </td>
-              <td style={{ border: "1px solid black" }}>
-                <strong>Before changes</strong>
-              </td>
-              <td style={{ border: "1px solid black" }}>
-                <strong>Changes to be mades</strong>
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={{ border: "1px solid black" }}>Product name</td>
-              <td style={{ border: "1px solid black" }}>{myItems.name}</td>
-              <td style={{ border: "1px solid black" }}>
-                <input
-                  type="text"
-                  value={productName}
-                  onChange={(e) => {
-                    setProductName(e.target.value);
-                  }}
-                ></input>
-              </td>
-            </tr>
-            <tr>
-              <td style={{ border: "1px solid black" }}>Product price</td>
-              <td style={{ border: "1px solid black" }}>
-                RM
-                {Number(myItems.price).toLocaleString("en-MY", {
-                  minimumFractionDigits: 2,
-                })}
-              </td>
-              <td style={{ border: "1px solid black" }}>
-                <input
-                  type="number"
-                  value={productPrice}
-                  onChange={(e) => {
-                    setProductPrice(e.target.value);
-                  }}
-                ></input>
-              </td>
-            </tr>
-            <tr>
-              <td style={{ border: "1px solid black" }}>Product stock count</td>
-              <td style={{ border: "1px solid black" }}>
-                {myItems.stockCount}
-              </td>
-              <td style={{ border: "1px solid black" }}>
-                Stock count cannot be edited for accuracy of stock inflow and
-                outflow 😉
-              </td>
-            </tr>
-            <tr>
-              <td style={{ border: "1px solid black" }}>Product brand</td>
-              <td style={{ border: "1px solid black" }}>{brand}</td>
-              <td style={{ border: "1px solid black" }}>
-                <label>Choose a brand: &nbsp;&nbsp;</label>
-                <select
-                  type="text"
-                  value={newBrand}
-                  onChange={(e) => setNewBrand(e.target.value)}
-                >
-                  {(() => {
-                    let rows = [];
-                    rows.push(
-                      <option key="" value="">
-                        Please select a brand
-                      </option>
-                    );
-                    for (let index = 0; index < brandList.length; index++) {
-                      if (brandList.length > 0) {
+      <motion.div>
+        <div className="flex flex-col gap-4 items-center px-20">
+          <div className="text-3xl font-bold text-blue-700 animate-pulse mb-10">
+            Edit item
+          </div>
+          <motion.table
+            className="overflow-x-auto p-4"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 120, damping: 10 }}
+          >
+            <table className="min-w-full bg-white rounded-lg shadow-lg">
+              <thead>
+                <tr className="bg-blue-100">
+                  <td className="px-4 py-3 border">
+                    <strong>Product details</strong>
+                  </td>
+                  <td className="px-4 py-3 border">
+                    <strong>Before changes</strong>
+                  </td>
+                  <td className="px-4 py-3 border">
+                    <strong>Changes to be mades</strong>
+                  </td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-3 border">Product name</td>
+                  <td className="px-4 py-3 border">{myItems.name}</td>
+                  <td className="px-4 py-3 border">
+                    <input
+                      type="text"
+                      value={productName}
+                      onChange={(e) => setProductName(e.target.value)}
+                      className="w-full px-3 py-2 border rounded-md hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </td>
+                </tr>
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-3 border">Product price</td>
+                  <td className="px-4 py-3 border">
+                    RM
+                    {Number(myItems.price).toLocaleString("en-MY", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </td>
+                  <td className="px-4 py-3 border">
+                    <input
+                      type="number"
+                      value={productPrice}
+                      onChange={(e) => {
+                        setProductPrice(e.target.value);
+                      }}
+                      className="w-full px-3 py-2 border rounded-md hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    ></input>
+                  </td>
+                </tr>
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-3 border">Product stock count</td>
+                  <td className="px-4 py-3 border">{myItems.stockCount}</td>
+                  <td className="px-4 py-3 border">
+                    Stock count cannot be edited for accuracy of stock inflow
+                    and outflow 😉
+                  </td>
+                </tr>
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-3 border">Product brand</td>
+                  <td className="px-4 py-3 border">{brand}</td>
+                  <td className="px-4 py-3 border">
+                    <label>Choose a brand: &nbsp;&nbsp;</label>
+                    <select
+                      type="text"
+                      value={newBrand}
+                      onChange={(e) => setNewBrand(e.target.value)}
+                      className="w-full px-3 py-2 border rounded-md hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      {(() => {
+                        let rows = [];
                         rows.push(
-                          <option key={index} value={brandList[index]}>
-                            {brandList[index]}
+                          <option key="" value="">
+                            Please select a brand
                           </option>
                         );
-                      }
-                    }
-                    rows.push(
-                      <option key="Others" value="Others">
-                        Others
-                      </option>
-                    );
-                    return rows;
-                  })()}
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td style={{ border: "1px solid black" }}>Product category</td>
-              <td style={{ border: "1px solid black" }}>{category}</td>
-              <td style={{ border: "1px solid black" }}>
-                <label> Choose a category: &nbsp;&nbsp;</label>
-                <select
-                  type="text"
-                  value={newCategory}
-                  onChange={(e) => setNewCategory(e.target.value)}
-                >
-                  {(() => {
-                    let rows = [];
-                    rows.push(
-                      <option key="" value="">
-                        Please select a category
-                      </option>
-                    );
-                    for (let index = 0; index < categoryList.length; index++) {
-                      if (categoryList.length > 0) {
+                        for (let index = 0; index < brandList.length; index++) {
+                          if (brandList.length > 0) {
+                            rows.push(
+                              <option key={index} value={brandList[index]}>
+                                {brandList[index]}
+                              </option>
+                            );
+                          }
+                        }
                         rows.push(
-                          <option key={index} value={categoryList[index]}>
-                            {categoryList[index]}
+                          <option key="Others" value="Others">
+                            Others
                           </option>
                         );
-                      }
-                    }
-                    rows.push(
-                      <option key="Others" value="Others">
-                        Others
-                      </option>
-                    );
-                    return rows;
-                  })()}
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td style={{ border: "1px solid black" }}>Product description</td>
-              <td style={{ border: "1px solid black" }}>
-                <textarea
-                  style={{ width: "476px", height: "113px" }}
-                  defaultValue={myItems.description}
-                  disabled
-                ></textarea>
-              </td>
-              <td style={{ border: "1px solid black" }}>
-                <textarea
-                  style={{ width: "476px", height: "113px" }}
-                  value={productDescription}
-                  onChange={(e) => setProductDescription(e.target.value)}
-                ></textarea>
-              </td>
-            </tr>
-            <tr>
-              <td style={{ border: "1px solid black" }}>Product images</td>
-              <td style={{ border: "1px solid black" }}>
-                {(() => {
-                  let images = [];
-                  for (let index = 0; index < productImages.length; index++) {
-                    images.push(
-                      <img
-                        key={index}
-                        src={productImages[index]}
-                        alt={productName}
-                        style={{
-                          width: "300px",
-                          height: "300px",
-                          objectFit: "cover",
-                          borderRadius: "10px",
-                        }}
-                      ></img>
-                    );
-                  }
-                  return images;
-                })()}
-              </td>
-              <td style={{ border: "1px solid black" }}>
-                <strong>
-                  Please note that each url is being separated by a coma
-                </strong>
-                <p></p>
-                <strong>
-                  Thus, for each image link, please remember to add a coma
-                  before each image link{" "}
-                </strong>
-                <textarea
-                  style={{ width: "488px", height: "347px" }}
-                  type="text"
-                  value={newProductImages}
-                  onChange={(e) => setNewProductImages(e.target.value)}
-                ></textarea>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <p></p>
-        <button
-          onClick={() => {
-            updateItem();
-          }}
-        >
-          Edit item
-        </button>
-      </center>
+                        return rows;
+                      })()}
+                    </select>
+                  </td>
+                </tr>
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-3 border">Product category</td>
+                  <td className="px-4 py-3 border">{category}</td>
+                  <td className="px-4 py-3 border">
+                    <label> Choose a category: &nbsp;&nbsp;</label>
+                    <select
+                      type="text"
+                      value={newCategory}
+                      onChange={(e) => setNewCategory(e.target.value)}
+                      className="w-full px-3 py-2 border rounded-md hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      {(() => {
+                        let rows = [];
+                        rows.push(
+                          <option key="" value="">
+                            Please select a category
+                          </option>
+                        );
+                        for (
+                          let index = 0;
+                          index < categoryList.length;
+                          index++
+                        ) {
+                          if (categoryList.length > 0) {
+                            rows.push(
+                              <option key={index} value={categoryList[index]}>
+                                {categoryList[index]}
+                              </option>
+                            );
+                          }
+                        }
+                        rows.push(
+                          <option key="Others" value="Others">
+                            Others
+                          </option>
+                        );
+                        return rows;
+                      })()}
+                    </select>
+                  </td>
+                </tr>
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-3 border">Product description</td>
+                  <td className="px-4 py-3 border">
+                    <textarea
+                      className="w-full h-full"
+                      defaultValue={myItems.description}
+                      disabled
+                    ></textarea>
+                  </td>
+                  <td className="px-4 py-3 border">
+                    <textarea
+                      value={productDescription}
+                      onChange={(e) => setProductDescription(e.target.value)}
+                      className="w-full px-3 py-2 border rounded-md hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    ></textarea>
+                  </td>
+                </tr>
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-3 border">Product images</td>
+                  <td className="px-4 py-3 border">
+                    <Carousel
+                      showThumbs={false}
+                      autoPlay
+                      infiniteLoop
+                      className="w-full md:w-3/4 lg:w-2/3 mb-10"
+                    >
+                      {(() => {
+                        let images = [];
+                        for (
+                          let index = 0;
+                          index < productImages.length;
+                          index++
+                        ) {
+                          images.push(
+                            <img
+                              key={index}
+                              src={productImages[index]}
+                              alt={productName}
+                              style={{
+                                width: "300px",
+                                height: "300px",
+                                objectFit: "cover",
+                                borderRadius: "10px",
+                              }}
+                            ></img>
+                          );
+                        }
+                        return images;
+                      })()}
+                    </Carousel>
+                  </td>
+                  <td className="px-4 py-3 border">
+                    <strong>
+                      Please note that each url is being separated by a coma
+                    </strong>
+                    <p></p>
+                    <strong>
+                      Thus, for each image link, please remember to add a coma
+                      before each image link{" "}
+                    </strong>
+                    <textarea
+                      className="w-full px-3 py-2 border rounded-md hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      type="text"
+                      value={newProductImages}
+                      onChange={(e) => setNewProductImages(e.target.value)}
+                    ></textarea>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </motion.table>
+          <motion.button
+            onClick={() => {
+              updateItem();
+            }}
+            className="bg-blue-500 text-lg shadow-lg rounded-lg px-4 py-3 hover:bg-blue6400 transition-all duration:300 text-white font-bold"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            Edit item
+          </motion.button>
+        </div>
+      </motion.div>
     </div>
   );
 }

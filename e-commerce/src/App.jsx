@@ -25,6 +25,7 @@ import { PaymentSuccess } from "./components/PaymentSuccess.jsx";
 import { PaymentFailed } from "./components/PaymentFailed.jsx";
 import { PaymentPage } from "./components/PaymentPage.jsx";
 import { CheckoutForm } from "./components/CheckoutForm.jsx";
+import { Test } from "./test.jsx";
 
 export function App() {
   if (typeof window !== "undefined") {
@@ -62,6 +63,7 @@ export function App() {
         <Route path="/PaymentFailed" element={<PaymentFailed />} />
         <Route path="/PaymentPage" element={<PaymentPage />} />
         <Route path="/CheckoutForm" element={<CheckoutForm />} />
+        <Route path="/test" element={<Test />} />
       </Routes>
     </BrowserRouter>
   );

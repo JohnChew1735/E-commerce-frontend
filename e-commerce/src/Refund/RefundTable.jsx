@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 export function RefundTable() {
   const location = useLocation();
@@ -52,17 +53,38 @@ export function RefundTable() {
     getProductImage();
   }, [refund]);
 
-  useEffect(() => {
-    console.log(refund);
-  }, [refund]);
-
   return (
     <div>
-      <p>
-        Logged in as: <strong style={{ color: "green" }}>{username}</strong> (
-        <span style={{ color: "purple" }}>{userType}</span>)
-      </p>
+      <div className="bg-gradient-to-r from-pink-200 via-yellow-100 to-blue-200 shadow-md py-4 px-6 flex justify-between items-center mb-3">
+        <div className="flex items-center space-x-3">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png"
+            alt="Logo"
+            className="w-10 h-10"
+          />
+          <h1 className="text-3xl font-extrabold text-gray-800 tracking-wide">
+            ShopSphere
+          </h1>
+          <button className="text-sm bg-white text-pink-500 px-2 py-1 rounded-full shadow-md font-medium animate-bounce">
+            🎉 Big Deals!
+          </button>
+        </div>
+        <div className="flex space-x-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", stiffness: 120, damping: 15 }}
+          >
+            <div>
+              <span>Logged in as: </span>
+              <strong className="text-blue-700">{username}</strong> (
+              <span className="text-purple-500">{userType}</span>)
+            </div>
+          </motion.div>
+        </div>
+      </div>
       <button
+        className="text-sm font-semibold bg-pink-400 text-white px-4 py-1 rounded-full shadow hover:bg-pink-500 transition"
         onClick={() => {
           navigate("/loginSuccess", {
             state: { username, userType, userID },
@@ -71,186 +93,109 @@ export function RefundTable() {
       >
         Back
       </button>
-      <center>
-        <h1>Previous Refund</h1>
-        <table
-          style={{
-            width: "80%",
-            borderCollapse: "collapse",
-            textAlign: "center",
-          }}
-        >
-          <thead>
-            <tr>
-              <td
-                style={{
-                  border: "1px solid black",
-                  width: "400px",
-                }}
-              >
-                Product Name
-              </td>
-              <td style={{ border: "1px solid black", width: "150px" }}>
-                Quantity
-              </td>
-              <td style={{ border: "1px solid black", width: "300px" }}>
-                Price per item(RM)
-              </td>
-              <td style={{ border: "1px solid black", width: "300px" }}>
-                Discount from coins(RM)
-              </td>
-              <td style={{ border: "1px solid black", width: "300px" }}>
-                Total price paid(RM)
-              </td>
-              <td style={{ border: "1px solid black", width: "150px" }}>
-                Order date
-              </td>
-              <td style={{ border: "1px solid black", width: "200px" }}>
-                Status
-              </td>
-              <td style={{ border: "1px solid black", width: "300px" }}>
-                Refund reason
-              </td>
-              <td style={{ border: "1px solid black", width: "300px" }}>
-                Refund image
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-            {(() => {
-              let refundArray = [];
-              for (let index = 0; index < refund.length; index++) {
-                refundArray.push(
-                  <tr key={index}>
-                    <td
-                      style={{
-                        border: "1px solid black",
-                        alignItems: "center",
-                        display: "flex",
-                        padding: "18px",
-                      }}
-                    >
-                      <img
-                        src={finalImage[index] || null}
-                        style={{
-                          borderRadius: "5px",
-                          height: "50px",
-                          width: "50px",
-                          objectFit: "cover",
-                        }}
-                        alt={refund[index].product_name}
-                      ></img>
-                      <strong> {refund[index].product_name}</strong>
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      <strong>{refund[index].quantity}</strong>
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      <strong>
-                        RM{" "}
-                        {Number(refund[index].price).toLocaleString("en-MY", {
-                          minimumFractionDigits: 2,
-                        })}
-                      </strong>
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      <strong>
-                        RM{" "}
-                        {Number(
-                          refund[index].discount_from_coins
-                        ).toLocaleString("en-MY", {
-                          minimumFractionDigits: 2,
-                        })}
-                      </strong>
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      <strong>
-                        RM{" "}
-                        {(
-                          Number(refund[index].price) *
-                            Number(refund[index].quantity) -
-                          Number(refund[index].discount_from_coins)
-                        ).toLocaleString("en-MY", {
-                          minimumFractionDigits: 2,
-                        })}
-                      </strong>
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      {new Date(refund[index].order_date).toLocaleDateString(
-                        "en-MY"
-                      )}
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      {refund[index].request_for_refund ===
-                      "Yes, pending approval" ? (
-                        <button
-                          style={{
-                            backgroundColor: "orange",
-                            color: "white",
-                            borderRadius: "5px",
-                            border: "none",
-                            padding: "10px",
-                          }}
-                        >
-                          Pending approval
-                        </button>
-                      ) : refund[index].request_for_refund === "Denied" ? (
-                        <button
-                          style={{
-                            backgroundColor: "red",
-                            borderRadius: "5px",
-                            border: "none",
-                            padding: "15px 15px",
-                            fontSize: "15px",
-                          }}
-                        >
-                          Denied
-                        </button>
-                      ) : refund[index].request_for_refund === "Approved" ? (
-                        <button
-                          style={{
-                            backgroundColor: "green",
-                            borderRadius: "5px",
-                            border: "none",
-                            padding: "15px 15px",
-                            fontSize: "15px",
-                          }}
-                        >
-                          Approved
-                        </button>
-                      ) : null}
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      <textarea
-                        disabled
-                        style={{ width: "220px", height: "72px" }}
-                        value={refund[index].refund_reason}
-                      ></textarea>
-                    </td>
-                    <td style={{ border: "1px solid black" }}>
-                      {refund[index].refund_image ? (
-                        <img
-                          src={refund[index].refund_image}
-                          alt={refund[index.product_name]}
-                          style={{
-                            borderRadius: "5px",
-                            height: "50px",
-                            width: "50px",
-                            objectFit: "cover",
-                          }}
-                        ></img>
-                      ) : (
-                        <p>No image attached</p>
-                      )}
-                    </td>
-                  </tr>
-                );
-              }
-              return refundArray;
-            })()}
-          </tbody>
-        </table>
-      </center>
+      <div className="flex flex-col items-center p-6">
+        <h1 className="text-4xl font-bold text-cyan-600 drop-shadow-lg animate-pulse">
+          Previous Refunds
+        </h1>
+        <div className="w-full max-w-4xl">
+          {refund.map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-white shadow-lg rounded-2xl p-6 mb-6 border-l-8"
+              style={{
+                borderColor:
+                  item.request_for_refund === "Approved"
+                    ? "green"
+                    : item.request_for_refund === "Denied"
+                    ? "red"
+                    : "orange",
+              }}
+            >
+              <div className="flex items-center mb-4">
+                <img
+                  src={finalImage[index] || ""}
+                  alt={item.product_name}
+                  className="w-16 h-16 rounded-md object-cover mr-4"
+                />
+                <div>
+                  <h2 className="text-xl font-semibold">{item.product_name}</h2>
+                  <p className="text-gray-500 text-sm">
+                    {new Date(item.order_date).toLocaleDateString("en-MY", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <p>
+                  <strong>Quantity:</strong> {item.quantity}
+                </p>
+                <p>
+                  <strong>Price per item:</strong> RM{" "}
+                  {Number(item.price).toLocaleString("en-MY", {
+                    minimumFractionDigits: 2,
+                  })}
+                </p>
+                <p>
+                  <strong>Discount from coins:</strong> RM{" "}
+                  {Number(item.discount_from_coins).toLocaleString("en-MY", {
+                    minimumFractionDigits: 2,
+                  })}
+                </p>
+                <p>
+                  <strong>Total paid:</strong> RM{" "}
+                  {(
+                    Number(item.price) * Number(item.quantity) -
+                    Number(item.discount_from_coins)
+                  ).toLocaleString("en-MY", { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+
+              <div className="mb-4">
+                <p>
+                  <strong>Refund Reason:</strong>
+                </p>
+                <textarea
+                  disabled
+                  value={item.refund_reason}
+                  className="w-full p-2 mt-2 border rounded-md resize-none"
+                  rows="3"
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span
+                  className={`px-4 py-2 rounded-full text-white cursor-not-allowed ${
+                    item.request_for_refund === "Approved"
+                      ? "bg-green-500"
+                      : item.request_for_refund === "Denied"
+                      ? "bg-red-500"
+                      : "bg-orange-400"
+                  }`}
+                >
+                  {item.request_for_refund}
+                </span>
+
+                {item.refund_image ? (
+                  <img
+                    src={item.refund_image}
+                    alt="Refund Proof"
+                    className="w-16 h-16 object-cover rounded-md"
+                  />
+                ) : (
+                  <p className="text-gray-400 italic">No image attached</p>
+                )}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export function Refund() {
   const location = useLocation();
@@ -84,11 +85,37 @@ export function Refund() {
 
   return (
     <div>
-      <p>
-        Logged in as: <strong style={{ color: "green" }}>{username}</strong> (
-        <span style={{ color: "purple" }}>{userType}</span>)
-      </p>
+      <div className="bg-gradient-to-r from-pink-200 via-yellow-100 to-blue-200 shadow-md py-4 px-6 flex justify-between items-center mb-3">
+        <div className="flex items-center space-x-3">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png"
+            alt="Logo"
+            className="w-10 h-10"
+          />
+          <h1 className="text-3xl font-extrabold text-gray-800 tracking-wide">
+            ShopSphere
+          </h1>
+          <button className="text-sm bg-white text-pink-500 px-2 py-1 rounded-full shadow-md font-medium animate-bounce">
+            🎉 Big Deals!
+          </button>
+        </div>
+        <div className="flex space-x-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", stiffness: 120, damping: 15 }}
+          >
+            <div>
+              <span>Logged in as: </span>
+              <strong className="text-blue-700">{username}</strong> (
+              <span className="text-purple-500">{userType}</span>)
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
       <button
+        className="text-sm font-semibold bg-pink-400 text-white px-4 py-1 rounded-full shadow hover:bg-pink-500 transition"
         onClick={() => {
           navigate("/Orders", {
             state: { username, userType, userID },
@@ -97,85 +124,130 @@ export function Refund() {
       >
         Back
       </button>
-      <center>
-        <h1>Requesting for refund</h1>
-        <div>
+      <div className="flex flex-col gap-6 items-center p-6">
+        <div className="text-3xl text-blue-500 font-bold animate-pulse">
+          Requesting for Refund
+        </div>
+
+        <motion.div
+          className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-2xl flex flex-col gap-6"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: "spring", stiffness: 120, damping: 15 }}
+        >
           <img
-            style={{
-              width: "200px",
-              height: "200px",
-              objectFit: "cover",
-              borderRadius: "5px",
-            }}
             src={item.product_images}
             alt={item.product_name}
-          ></img>
-        </div>
-        <div>
-          Product name:&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          &nbsp;&nbsp;&nbsp;<input value={item.product_name} disabled></input>
-        </div>
-        <p></p>
-        <div>
-          Product price per item(RM):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <input
-            value={Number(item.price).toLocaleString("en-MY", {
-              minimumFractionDigits: 2,
-            })}
-            disabled
-          ></input>
-        </div>
-        <p></p>
-        <div>
-          Quantity
-          bought:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <input value={item.quantity} disabled></input>
-        </div>
-        <p></p>
-        <div>
-          Discount from
-          coins:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <input
-            value={Number(item.discount_from_coins).toLocaleString("en-MY", {
-              minimumFractionDigits: 2,
-            })}
-            disabled
-          ></input>
-        </div>
-        <p></p>
-        <div>
-          Total sum
-          paid(RM):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <input
-            value={(Number(item.price) * Number(item.quantity)).toLocaleString(
-              "en-MY",
-              {
-                minimumFractionDigits: 2,
-              }
+            className="w-48 h-48 object-cover rounded-lg self-center"
+          />
+
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm">
+              <span className="text-lg font-semibold text-gray-700">
+                Product Name:
+              </span>
+              <span className="text-gray-600">{item.product_name}</span>
+            </div>
+
+            <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm">
+              <span className="text-lg font-semibold text-gray-700">
+                Price per Item (RM):
+              </span>
+              <input
+                value={Number(item.price).toLocaleString("en-MY", {
+                  minimumFractionDigits: 2,
+                })}
+                disabled
+                className="bg-white text-gray-600 rounded-md px-4 py-2 border border-gray-300 w-40 text-center"
+              />
+            </div>
+
+            <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm">
+              <span className="text-lg font-semibold text-gray-700">
+                Quantity Bought:
+              </span>
+              <span className="text-gray-600">{item.quantity}</span>
+            </div>
+
+            <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm">
+              <span className="text-lg font-semibold text-gray-700">
+                Discount from Coins (RM):
+              </span>
+              <span className="text-gray-600">
+                {Number(item.discount_from_coins).toLocaleString("en-MY", {
+                  minimumFractionDigits: 2,
+                })}
+              </span>
+            </div>
+            <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm">
+              <span className="text-lg font-semibold text-gray-700">
+                Total Sum Paid (RM):
+              </span>
+              <span className="text-gray-600">
+                {(Number(item.price) * Number(item.quantity)).toLocaleString(
+                  "en-MY",
+                  {
+                    minimumFractionDigits: 2,
+                  }
+                )}
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-semibold text-gray-700 mb-2">
+              Reason for Refund:
+            </label>
+            <motion.textarea
+              className="w-full h-32 p-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400"
+              value={refundReason}
+              onChange={(e) => setRefundReason(e.target.value)}
+              placeholder="Explain your reason..."
+              whileHover={{
+                boxShadow: "0 0 10px rgba(59, 130, 246, 0.7)",
+              }}
+            ></motion.textarea>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <label className="block font-semibold text-gray-700">
+              Upload Proof (optional):
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleUpload}
+              className="text-gray-600"
+            />
+
+            {loading && (
+              <p className="text-blue-400 animate-pulse">Uploading...</p>
             )}
-            disabled
-          ></input>
-          <p></p>
-          <strong>Please provide your reason for refund below:</strong>
-          <p></p>
-          <textarea
-            style={{ width: "449px", height: "108px" }}
-            value={refundReason}
-            onChange={(e) => setRefundReason(e.target.value)}
-          ></textarea>
-          <p></p>
-          <input type="file" onChange={handleUpload} accept="image"></input>
-          {loading && <p>Uploading</p>}
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          <p></p>
-          {imageUrl && <img src={imageUrl} alt="Uploaded" width="300px"></img>}
-          <p></p>
-          <button onClick={() => updateRefundReason()} disabled={loading}>
-            Request for refund
-          </button>
-        </div>
-      </center>
+            {error && <p className="text-red-500">{error}</p>}
+
+            {imageUrl && (
+              <img
+                src={imageUrl}
+                alt="Uploaded Proof"
+                className="w-72 h-auto object-cover rounded-lg self-center"
+              />
+            )}
+          </div>
+
+          <motion.button
+            onClick={updateRefundReason}
+            disabled={loading}
+            className={`w-full py-3 rounded-lg text-white text-lg font-semibold transition duration-300 ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600"
+            }`}
+            whileHover={{ scale: 1.1 }}
+          >
+            {loading ? "Processing..." : "Submit Refund Request"}
+          </motion.button>
+        </motion.div>
+      </div>
     </div>
   );
 }
