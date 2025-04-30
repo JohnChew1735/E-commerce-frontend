@@ -446,7 +446,7 @@ export function LoginSuccess() {
                   <motion.div
                     key={index}
                     className="flex justify-between items-center mb-2"
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: 1.01 }}
                   >
                     <span>
                       Order <strong>{notification.product_name}</strong>{" "}
@@ -480,7 +480,7 @@ export function LoginSuccess() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="absolute top-[100px] right-[1600px] p-4 bg-white border border-black rounded shadow-md z-50 w-64"
+            className="absolute top-[100px] right-[1400px] p-4 bg-white border border-black rounded shadow-md z-50 w-64"
           >
             <ul className="space-y-2 text-sm">
               {userType === "seller" && (
