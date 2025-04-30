@@ -360,28 +360,40 @@ export function ProductDetails() {
                 <p>No description available.</p>
               )}
             </div>
-
             {/* Item Price */}
             <p className="text-lg font-bold text-black">
-              Price: RM {itemDetails.price}
+              Price: RM{" "}
+              {Number(itemDetails.price).toLocaleString("en-MY", {
+                style: "currency",
+                currency: "MYR",
+              })}
             </p>
-
             {/* Clicked State */}
             <p className="text-sm text-gray-500">
               Clicked: {itemDetails.clicked}
             </p>
+            <h3 className="text-base font-semibold text-black mb-2">
+              Customer Feedback
+            </h3>
 
-            <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-md p-2 bg-gray-50 text-sm text-gray-700 whitespace-pre-line">
-              {customerFeedback && customerFeedback.length > 0
-                ? customerFeedback.map((fb, index) => (
-                    <p key={index} className="mb-2">
-                      • {fb.customer_feedback} —{" "}
-                      <span className="text-gray-500 italic">
-                        {fb.customerName}
-                      </span>
+            <div className="max-h-60 overflow-y-auto space-y-3">
+              {customerFeedback && customerFeedback.length > 0 ? (
+                customerFeedback.map((fb, index) => (
+                  <div
+                    key={index}
+                    className="bg-white border border-gray-200 rounded-md p-3 shadow-sm"
+                  >
+                    <p className="text-sm text-gray-800">
+                      “{fb.customer_feedback}”
                     </p>
-                  ))
-                : "No feedback yet."}
+                    <p className="text-xs text-gray-500 italic text-right mt-1">
+                      — {fb.customerName}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-gray-600">No feedback yet.</p>
+              )}
             </div>
           </div>
 
